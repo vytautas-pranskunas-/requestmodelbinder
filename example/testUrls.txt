@@ -1,0 +1,3 @@
+http://www.requestmodelbinder.local/api/?Method=TestAuthBinder&priority=third&name=vytas&createdon=2012.01.04%2010:15Z&ChildModelTest.count=15&ChildModelTest2.SecondChildModelTest.name=test%20name&identifier=123&testenum=third
+http://www.requestmodelbinder.local/api/?Method=TestAuthBinder&Identifier=T4&Pin=123&testenum=Second
+http://www.requestmodelbinder.local/api/?Method=TestAuthBinder&Identifier=T4&TestEnum=Second&priority=third&name=vytas&createdon=2012.01.04%2010:15
