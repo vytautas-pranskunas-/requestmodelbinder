@@ -38,3 +38,5 @@ public class AuthService
     } 
 }  
 ```
+
+NuGet package also available.
