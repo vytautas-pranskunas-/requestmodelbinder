@@ -40,7 +40,7 @@ public class AuthService
 ```
 
 Binder handles 2 types of attributes: **Required** and **Optional**. They used for telling binder whether parameter must be provided in URL or it can gain default value if missing
-**Required** attribute is property and class scoped.
-**Optional** attribute is property scoped only.
+* **Required** attribute is property and class scoped.
+* **Optional** attribute is property scoped only.
 
 NuGet package also available.
