@@ -39,4 +39,8 @@ public class AuthService
 }  
 ```
 
+Binder handles 2 types of attributes: **Required** and **Optional**.
+**Required** attribute is property and class scoped.
+**Optional** attribute is property scoped only.
+
 NuGet package also available.
