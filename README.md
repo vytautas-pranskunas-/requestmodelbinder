@@ -19,7 +19,7 @@ public class CoreController : ApiController
 
         try
         {
-            ModelBinder.InvokeMethod(authService, methodName, requestString);
+            var result = ModelBinder.InvokeMethod(authService, methodName, requestString);
         }
         catch (Exception ex)
         {
