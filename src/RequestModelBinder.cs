@@ -16,7 +16,7 @@ namespace RequestModelBinder
 {
     public static class ModelBinder
     {
-        public static void InvokeMethod(object instance, string methodName, NameValueCollection requestItems = null)
+        public static object InvokeMethod(object instance, string methodName, NameValueCollection requestItems = null)
         {
             var method = instance.GetType().GetMethod(methodName);
             if (method == null)
@@ -28,7 +28,7 @@ namespace RequestModelBinder
             if (!methodParams.Any())
             {
                 method.Invoke(instance, null);
-                return;
+                return null;
             }
 
             var requestItemsLowered = new NameValueCollection();
@@ -61,7 +61,7 @@ namespace RequestModelBinder
                 parametersList.Add(destination);
             }
 
-            method.Invoke(instance, parametersList.ToArray());
+            return method.Invoke(instance, parametersList.ToArray());
         }
 
         private static object ParameterValueMapper(ParameterInfo parameterInfo, NameValueCollection requestItems)
@@ -127,17 +127,27 @@ namespace RequestModelBinder
                 if (classLevelRequiredAttribute != null && propertyLevelOptionalAttribute == null)
                 {
                     var definedErrorMessage = ((RequiredAttribute) classLevelRequiredAttribute).ErrorMessage;
-                    var errorMessage = string.Format("{0}{1}Property '{2}' is missing.", definedErrorMessage, !string.IsNullOrEmpty(definedErrorMessage) ? ". " : string.Empty, GetMissingProperties(destination, requestItems, classPath));
+                    var errorMessage = string.Format("{0}{1}Property '{2}' is required.", definedErrorMessage, !string.IsNullOrEmpty(definedErrorMessage) ? ". " : string.Empty, GetMissingProperties(destination, requestItems, classPath));
                     throw new NullReferenceException(errorMessage);
                 }
                 
                 var propertyLevelRequiredAttribute = Attribute.GetCustomAttribute(destinationProperty, typeof (RequiredAttribute));
                 if (propertyLevelRequiredAttribute != null && propertyLevelOptionalAttribute == null)
                 {
-                    throw new NullReferenceException(((RequiredAttribute)propertyLevelRequiredAttribute).ErrorMessage);
+                    var errorMessage =
+                        string.IsNullOrWhiteSpace(((RequiredAttribute) propertyLevelRequiredAttribute).ErrorMessage)
+                            ? string.Format("Property '{0}' is required", propertyNameLower)
+                            : ((RequiredAttribute) propertyLevelRequiredAttribute).ErrorMessage;
+
+                    throw new NullReferenceException(errorMessage);
                 }
 
-                destinationProperty.SetValue(destination, null, null);
+                //check if constructor did not set value yet
+               /* if (GetDefault(destinationProperty.PropertyType).Equals(destinationProperty.GetValue(destination, null)))
+                {
+                    //default value
+                    destinationProperty.SetValue(destination, null, null);
+                }*/
                 return;
             }
 
@@ -157,6 +167,11 @@ namespace RequestModelBinder
                 destinationProperty.SetValue(destination, null, null);
             }
         }
+
+        /*private static object GetDefault(Type type)
+        {
+            return type.IsValueType ? Activator.CreateInstance(type) : null;
+        }*/
 
         private static string GetMissingProperties(object destination, NameValueCollection requestItems, string classPath)
         {
