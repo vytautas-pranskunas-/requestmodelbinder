@@ -179,7 +179,7 @@ namespace RequestModelBinder
             var properties = destination.GetType().GetProperties();
 
             var retVal =  properties
-                .Where(p => p.PropertyType.Namespace != null && p.PropertyType.Namespace.StartsWith("System"))
+                .Where(p => p.PropertyType.Namespace != null && (p.PropertyType.Namespace.StartsWith("System") || p.PropertyType.IsEnum))
                 .Where(p => Attribute.GetCustomAttribute(p, typeof(OptionalAttribute)) == null)
                 .Select(propertyInfo => string.Format("{0}{1}", classPath, propertyInfo.Name.ToLower()).ToLower())
                 .Where(propertyNameLower => string.IsNullOrWhiteSpace(requestItems.Get(propertyNameLower)))
