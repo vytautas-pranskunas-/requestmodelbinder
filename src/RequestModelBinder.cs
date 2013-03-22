@@ -27,8 +27,7 @@ namespace RequestModelBinder
             var methodParams = method.GetParameters();
             if (!methodParams.Any())
             {
-                method.Invoke(instance, null);
-                return null;
+                return method.Invoke(instance, null);
             }
 
             var requestItemsLowered = new NameValueCollection();
