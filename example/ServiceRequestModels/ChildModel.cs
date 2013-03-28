@@ -1,8 +1,6 @@
-﻿using RequestModelBinder;
-
-namespace RequestModelBinderTest.ServiceRequestModels
+﻿namespace RequestModelBinderTest.ServiceRequestModels
 {
-    public class ChildModel
+    public class ChildModel : ISecondGenericClass
     {
         public int Count { get; set; }
         public SecondChildModel SecondChildModelTest { get; set; }

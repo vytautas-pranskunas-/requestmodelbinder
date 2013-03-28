@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Reflection;
 using System.Web;
 using System.Web.Http;
 using RequestModelBinderTest.Services;
 using RequestModelBinder;
+using System.Linq;
 
 namespace RequestModelBinderTest.Controllers
 {
@@ -17,7 +19,15 @@ namespace RequestModelBinderTest.Controllers
 
             try
             {
-                ModelBinder.InvokeMethod(authService, methodName, requestString);
+                //call by name
+                var result = ModelBinder.InvokeMethod(authService, methodName, requestString);
+
+                //call by filter
+                Func<MethodInfo, bool> func = m => m.GetParameters().Any(c => c.ParameterType.Name.Equals("ChildModel"));
+                var result2 = ModelBinder.InvokeMethod(authService, func, requestString);
+
+                //call empty
+                var result3 = ModelBinder.InvokeMethod(authService, methodName, callEmpty:true);
             }
             catch (Exception ex)
             {
