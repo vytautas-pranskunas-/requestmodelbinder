@@ -52,7 +52,7 @@ namespace RequestModelBinder
         {
             if (callEmpty)
             {
-                return InvokeMethod(instance, m => !m.GetParameters().Any());
+                return InvokeMethod(instance, m => !m.GetParameters().Any() && m.Name == methodName);
             }
 
             var method = instance.GetType().GetMethod(methodName);
@@ -89,7 +89,7 @@ namespace RequestModelBinder
 
         private static object InvokeMethod(object instance, MethodInfo method, NameValueCollection requestItems)
         {
-            if (method == null)
+            if (method == null || method.GetBaseDefinition().DeclaringType == typeof(object) || !method.IsPublic)
             {
                 throw new MethodAccessException("There is no such method");
             }
